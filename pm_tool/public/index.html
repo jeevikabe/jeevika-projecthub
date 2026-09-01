@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeevika ProjectHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- 1. Authentication Modal (Polished UI) -->
+  <div id="auth-modal" class="modal-overlay" style="display: flex;">
+    <div class="modal-card auth-card">
+      <div class="auth-header">
+        <div class="auth-brand-logo">⚡</div>
+        <h2 id="auth-heading">Welcome Back</h2>
+        <p class="subtitle" id="auth-subheading">Sign in to access your projects and tasks</p>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-box" class="form-box">
+        <div class="input-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="login-email" placeholder="name@gmail.com" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+        </div>
+        <button class="btn-primary btn-full btn-auth" onclick="login()">Sign In</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="toggleAuthMode('register')">Create one</a></p>
+      </div>
+
+      <!-- Register Form -->
+      <div id="register-box" class="form-box" style="display: none;">
+        <div class="input-group">
+          <label for="reg-name">Full Name</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="reg-name" placeholder="UserName" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="reg-email">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="reg-email" placeholder="name@gmail.com" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="reg-password">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-password" placeholder="••••••••" required>
+          </div>
+        </div>
+        <button class="btn-primary btn-full btn-auth" onclick="register()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="toggleAuthMode('login')">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Custom Logout Modal -->
+  <div id="logout-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card dialog-card">
+      <div class="dialog-icon danger-icon">🚪</div>
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to log out of your account?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('logout-modal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmLogout()">Yes, Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Add Project Modal -->
+  <div id="create-project-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h3>Create New Project</h3>
+      <div class="input-group">
+        <label for="new-project-title">Project Title</label>
+        <input type="text" id="new-project-title" placeholder="e.g. Website Design" required>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('create-project-modal')">Cancel</button>
+        <button class="btn-primary" onclick="submitCreateProject()">Create Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Edit Project Modal -->
+  <div id="edit-project-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h3>Edit Project Title</h3>
+      <div class="input-group">
+        <label for="edit-project-title-input">Project Title</label>
+        <input type="text" id="edit-project-title-input" required>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('edit-project-modal')">Cancel</button>
+        <button class="btn-primary" onclick="submitEditProject()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Delete Project Modal -->
+  <div id="delete-project-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card dialog-card">
+      <div class="dialog-icon danger-icon">🗑️</div>
+      <h3>Delete Project?</h3>
+      <p>This will permanently remove the project and all associated tasks.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('delete-project-modal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmDeleteProject()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Task Modal -->
+  <div id="delete-task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card dialog-card">
+      <div class="dialog-icon danger-icon">🗑️</div>
+      <h3>Delete Task?</h3>
+      <p>Are you sure you want to permanently remove this task?</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('delete-task-modal')">Cancel</button>
+        <button class="btn-danger" onclick="confirmDeleteTask()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Add Task Modal -->
+  <div id="create-task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h3>Add New Task</h3>
+      <div class="input-group">
+        <label for="task-title-input">Task Title</label>
+        <input type="text" id="task-title-input" placeholder="e.g. Fix navigation bug" required>
+      </div>
+      <div class="input-group">
+        <label for="task-desc-input">Description</label>
+        <textarea id="task-desc-input" rows="3" placeholder="Brief details about the task..."></textarea>
+      </div>
+      <div class="input-group">
+        <label for="task-assignee-input">Assign To (User Name)</label>
+        <input type="text" id="task-assignee-input" placeholder="e.g. Jeevika">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('create-task-modal')">Cancel</button>
+        <button class="btn-primary" onclick="submitCreateTask()">Create Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Edit Task Modal -->
+  <div id="edit-task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <h3>Edit Task</h3>
+      <div class="input-group">
+        <label for="edit-task-title-input">Task Title</label>
+        <input type="text" id="edit-task-title-input" required>
+      </div>
+      <div class="input-group">
+        <label for="edit-task-desc-input">Description</label>
+        <textarea id="edit-task-desc-input" rows="3"></textarea>
+      </div>
+      <div class="input-group">
+        <label for="edit-task-assignee-input">Assign To</label>
+        <input type="text" id="edit-task-assignee-input">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeModal('edit-task-modal')">Cancel</button>
+        <button class="btn-primary" onclick="submitEditTask()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Main Shell -->
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <h2>ProjectHub</h2>
+      </div>
+      
+      <button class="btn-primary btn-full" onclick="openCreateProjectModal()">+ New Project</button>
+      
+      <div class="sidebar-section">
+        <span class="section-title">PROJECTS</span>
+        <ul id="project-list"></ul>
+      </div>
+
+      <div class="user-profile-box" id="user-profile-box" style="display: none;">
+        <div class="user-info">
+          <span class="user-avatar">👤</span>
+          <span id="user-display-name">User</span>
+        </div>
+        <button class="logout-btn" onclick="promptLogout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="board-container">
+      <header>
+        <div class="header-left">
+          <h1 id="project-title">Welcome!</h1>
+          <span id="welcome-user" class="welcome-text" style="display: none;"></span>
+          <!-- Project Actions (Edit & Delete) -->
+          <div id="project-actions" class="project-actions" style="display: none;">
+            <button class="btn-icon" title="Edit Project Title" onclick="openEditProjectModal()">✏️</button>
+            <button class="btn-icon danger" title="Delete Project" onclick="openDeleteProjectModal()">🗑️</button>
+          </div>
+        </div>
+        <button id="new-task-btn" class="btn-primary" onclick="openCreateTaskModal()" style="display: none;">+ New Task</button>
+      </header>
+
+      <!-- Empty View -->
+      <div id="no-project-view" class="no-project-hero">
+        <div class="hero-card">
+          <div class="hero-icon">📁</div>
+          <h2>No Project Selected</h2>
+          <p>Select an existing project from the sidebar or click <strong>+ New Project</strong> to begin.</p>
+        </div>
+      </div>
+
+      <!-- Kanban Columns -->
+      <div class="board" id="board-view" style="display: none;">
+        <div class="column" id="col-Todo" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'Todo')">
+          <h3>TODO</h3>
+        </div>
+        <div class="column" id="col-InProgress" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'In Progress')">
+          <h3>IN PROGRESS</h3>
+        </div>
+        <div class="column" id="col-Done" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'Done')">
+          <h3>DONE</h3>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
