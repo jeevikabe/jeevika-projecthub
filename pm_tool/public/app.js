@@ -1133,36 +1133,16 @@ document.addEventListener('DOMContentLoaded', enableTouchDragAndDrop);
 // ==========================================================================
 // Soft Keyboard Open/Close & Android Back Button Interception
 // ==========================================================================
-// document.addEventListener('focusin', (e) => {
-//   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-//     document.body.classList.add('keyboard-active');
-//     setTimeout(() => {
-//       e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-//     }, 300);
-//   }
-// });
-
-// Add keyboard active class and ensure focused inputs stay visible above virtual keyboard
 document.addEventListener('focusin', (e) => {
-  const target = e.target;
-  if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
     document.body.classList.add('keyboard-active');
-
-    // Use visualViewport API if available for precise keyboard detection, or fallback to smooth scroll
-    if (window.visualViewport) {
-      const handleResize = () => {
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        window.visualViewport.removeEventListener('resize', handleResize);
-      };
-      window.visualViewport.addEventListener('resize', handleResize);
-    }
-
-    // Fallback delay for devices without visualViewport resize events
     setTimeout(() => {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 300);
   }
 });
+
+
 
 
 

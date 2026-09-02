@@ -371,7 +371,7 @@ header {
 }
 
 /* Modals & Dialog Elements (Keyboard Stabilized) */
-/* .modal-overlay {
+.modal-overlay {
   position: fixed; 
   top: 0;
   left: 0;
@@ -401,39 +401,8 @@ header {
   flex-direction: column;
   gap: 14px;
   margin: auto;
-} */
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh; /* Adapts dynamically to mobile viewport/keyboard */
-  background-color: rgba(11, 15, 25, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow-y: auto;
-  padding: 40px 16px 140px 16px;
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
 }
 
-.modal-card {
-  background-color: var(--bg-modal);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: var(--shadow-md);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin: 0 auto; /* Keeps card horizontally centered without overriding flex-start vertical alignment */
-}
 
 body.keyboard-active {
   height: 100% !important;
