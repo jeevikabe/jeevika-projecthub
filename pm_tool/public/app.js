@@ -516,50 +516,32 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
   }
 
-  // 1. Enter key listeners for password fields
+  // Handle Enter keypress for password inputs
   document.getElementById('login-password')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      e.target.blur();
+      e.preventDefault();
+      e.target.blur(); // Safely dismiss virtual keyboard
       login(e);
     }
   });
 
   document.getElementById('reg-password')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      e.target.blur();
+      e.preventDefault();
+      e.target.blur(); // Safely dismiss virtual keyboard
       register(e);
     }
   });
 
-  // 2. Prevent mobile back button from exiting app when soft keyboard opens
-  setupMobileKeyboardBackFix();
-});
-
-// Mobile Keyboard Back-Button Interceptor
-function setupMobileKeyboardBackFix() {
-  const inputs = document.querySelectorAll('input, textarea');
-
-  inputs.forEach(input => {
-    input.addEventListener('focus', () => {
-      // Push a dummy state so pressing back stays on the page
-      history.pushState({ keyboardOpen: true }, '');
-    });
-
-    input.addEventListener('blur', () => {
-      // Remove dummy state when input loses focus naturally
-      if (history.state && history.state.keyboardOpen) {
-        history.back();
+  // Tap background/card empty area to dismiss keyboard without triggering back navigation
+  document.addEventListener('touchstart', (e) => {
+    if (!['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes(e.target.tagName)) {
+      if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        document.activeElement.blur();
       }
-    });
-  });
-
-  window.addEventListener('popstate', (e) => {
-    // If back button was pressed while an input is focused, blur it to drop keyboard
-    if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-      document.activeElement.blur();
     }
-  });
-}
+  }, { passive: true });
+});
 
 // Dynamic Greeting & Selection State
 function updateUserDisplay() {
@@ -984,6 +966,7 @@ async function addComment(e, taskId) {
   if (e.key === 'Enter' && e.target.value.trim()) {
     const text = e.target.value.trim();
     e.target.value = '';
+    e.target.blur(); // Dismiss keyboard after submitting comment
 
     const res = await fetch(`${API_BASE}/api/tasks/${taskId}/comments`, {
       method: 'POST',
