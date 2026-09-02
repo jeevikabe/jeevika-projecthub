@@ -509,7 +509,7 @@ let currentUser = JSON.parse(localStorage.getItem('user')) || null;
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!currentUser) {
-    document.getElementById('auth-modal').style.display = 'flex';
+    openAuthModal();
   } else {
     document.getElementById('auth-modal').style.display = 'none';
     updateUserDisplay();
@@ -634,7 +634,7 @@ async function login(e) {
   if (data.token) {
     currentUser = data;
     localStorage.setItem('user', JSON.stringify(data));
-    document.getElementById('auth-modal').style.display = 'none';
+    closeAuthModal();
     updateUserDisplay();
     loadProjects();
   } else {
@@ -677,7 +677,7 @@ function confirmLogout() {
   });
 
   toggleAuthMode('login');
-  document.getElementById('auth-modal').style.display = 'flex';
+  openAuthModal();
 }
 
 // Projects Logic
@@ -1117,7 +1117,7 @@ async function handleTouchEnd(e) {
 document.addEventListener('DOMContentLoaded', enableTouchDragAndDrop);
 
 // ==========================================================================
-// Soft Keyboard Open/Close Fix for Mobile Input Fields
+// Soft Keyboard Open/Close & Android Back Button Interception
 // ==========================================================================
 document.addEventListener('focusin', (e) => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
@@ -1133,3 +1133,41 @@ document.addEventListener('focusout', (e) => {
     document.body.classList.remove('keyboard-active');
   }
 });
+
+// Intercept Android back button when inputs are focused or modal is open
+window.addEventListener('popstate', (event) => {
+  const activeElement = document.activeElement;
+  
+  // If an input or textarea is focused, blur it to close the keyboard instead of navigating back
+  if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+    event.preventDefault();
+    activeElement.blur();
+    history.pushState(null, '', window.location.href);
+    return;
+  }
+
+  // If the auth modal is open when back is pressed, close it or prevent exit if required
+  const authModal = document.getElementById('auth-modal');
+  if (authModal && authModal.style.display === 'flex' && currentUser) {
+    event.preventDefault();
+    closeAuthModal();
+  }
+});
+
+function openAuthModal() {
+  const authModal = document.getElementById('auth-modal');
+  if (authModal) {
+    authModal.style.display = 'flex';
+    history.pushState({ modalOpen: true }, '', window.location.href);
+  }
+}
+
+function closeAuthModal() {
+  const authModal = document.getElementById('auth-modal');
+  if (authModal) {
+    authModal.style.display = 'none';
+    if (history.state && history.state.modalOpen) {
+      history.back();
+    }
+  }
+}
