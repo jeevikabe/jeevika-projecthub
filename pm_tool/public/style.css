@@ -371,93 +371,36 @@ header {
 }
 
 /* Modals & Dialog Elements (Keyboard Stabilized) */
-/* .modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; 
-  height: 100%;
-  height: -webkit-fill-available;
+.modal-overlay {
+  position: fixed; /* Fixes positioning to the viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   background-color: rgba(11, 15, 25, 0.85);
   backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
-  justify-content: center; */
-  /* align-items: center; */
-  /* padding: 16px;
-  overflow-y: auto; */
-  /* align-items: flex-start;  */
-  /* padding-top: 40px;
-  padding-bottom: 120px; */
-/* } */
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 40px 16px 140px 16px;
+  -webkit-overflow-scrolling: touch;
+}
 
-/* .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100%;
-    min-height: 100vh;
-    align-items: flex-start;
-    overflow-y: auto;
-    padding: 20px 16px 140px 16px;
-    -webkit-overflow-scrolling: touch;
-  } */
-
-/* .modal-card {
+.modal-card {
   background-color: var(--bg-modal);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 24px;
   width: 100%;
   max-width: 400px;
-  padding: 24px 24px 40px 24px; 
-  margin-bottom: auto;
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin: auto;
-  max-height: 85vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-} */
-
-/* .modal-card {
-    margin-top: 10px;
-    margin-bottom: auto;
-    max-height: none; 
-  } */
-
-  .modal-overlay {
-    position: fixed; /* Fixes positioning to the viewport */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    background-color: rgba(11, 15, 25, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow-y: auto;
-    padding: 40px 16px 140px 16px;
-    -webkit-overflow-scrolling: touch;
-}
-
-.modal-card {
-    background-color: var(--bg-modal);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: var(--shadow-md);
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin: auto;
 }
 
 body.keyboard-active {
@@ -484,11 +427,12 @@ body.keyboard-active {
 
 .input-group input:focus, .input-group textarea:focus { border-color: var(--border-focus); }
 
-/* Field Input Icon Containers */
+/* Field Input Icon Containers & Password Toggle Controls */
 .input-with-icon {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .input-with-icon .input-icon {
@@ -497,11 +441,40 @@ body.keyboard-active {
   font-size: 1rem;
   opacity: 0.7;
   pointer-events: none;
+  z-index: 1;
 }
 
 .input-with-icon input,
 .input-with-icon textarea {
   padding-left: 38px !important;
+}
+
+/* Password Visibility Toggle Button */
+.input-with-icon .toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: color 0.2s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.input-with-icon .toggle-password-btn:hover {
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.input-with-icon input[type="password"],
+.input-with-icon input[type="text"] {
+  padding-right: 38px;
 }
 
 .auth-header {
@@ -730,4 +703,3 @@ body.keyboard-active {
 
   .toast { width: 100%; }
 }
-

@@ -543,6 +543,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 });
 
+// Toggle password text/password field visibility
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
 // Dynamic Greeting & Selection State
 function updateUserDisplay() {
   const profileBox = document.getElementById('user-profile-box');
@@ -1171,4 +1185,3 @@ function closeAuthModal() {
     }
   }
 }
-
