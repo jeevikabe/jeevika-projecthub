@@ -610,7 +610,7 @@ header {
 
 /* Form Input Wrapper with Icons */
 .input-wrapper {
-  position: relative;
+  position.relative;
   display: flex;
   align-items: center;
 }
