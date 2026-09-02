@@ -516,21 +516,50 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProjects();
   }
 
-  // Attach keydown listeners after DOM is fully loaded
+  // 1. Enter key listeners for password fields
   document.getElementById('login-password')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      e.target.blur(); // Closes the mobile keyboard
+      e.target.blur();
       login(e);
     }
   });
 
   document.getElementById('reg-password')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-      e.target.blur(); // Closes the mobile keyboard
+      e.target.blur();
       register(e);
     }
   });
+
+  // 2. Prevent mobile back button from exiting app when soft keyboard opens
+  setupMobileKeyboardBackFix();
 });
+
+// Mobile Keyboard Back-Button Interceptor
+function setupMobileKeyboardBackFix() {
+  const inputs = document.querySelectorAll('input, textarea');
+
+  inputs.forEach(input => {
+    input.addEventListener('focus', () => {
+      // Push a dummy state so pressing back stays on the page
+      history.pushState({ keyboardOpen: true }, '');
+    });
+
+    input.addEventListener('blur', () => {
+      // Remove dummy state when input loses focus naturally
+      if (history.state && history.state.keyboardOpen) {
+        history.back();
+      }
+    });
+  });
+
+  window.addEventListener('popstate', (e) => {
+    // If back button was pressed while an input is focused, blur it to drop keyboard
+    if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      document.activeElement.blur();
+    }
+  });
+}
 
 // Dynamic Greeting & Selection State
 function updateUserDisplay() {
