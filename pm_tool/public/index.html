@@ -254,12 +254,15 @@
       <div class="board" id="board-view" style="display: none;">
         <div class="column" id="col-Todo" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'Todo')">
           <h3>TODO</h3>
+          <div class="empty-column-placeholder" id="placeholder-Todo">No task yet</div>
         </div>
         <div class="column" id="col-InProgress" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'In Progress')">
           <h3>IN PROGRESS</h3>
+          <div class="empty-column-placeholder" id="placeholder-InProgress">No task yet</div>
         </div>
         <div class="column" id="col-Done" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'Done')">
           <h3>DONE</h3>
+          <div class="empty-column-placeholder" id="placeholder-Done">No task yet</div>
         </div>
       </div>
     </main>

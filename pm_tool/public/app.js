@@ -796,26 +796,28 @@ async function loadTasks() {
   const tasks = await res.json();
 
   ['Todo', 'In Progress', 'Done'].forEach(status => {
-    const colId = `col-${status.replace(/\s+/g, '')}`;
+    // Map status string to matching DOM column ID
+    const statusKey = status === 'In Progress' ? 'InProgress' : status;
+    const colId = `col-${statusKey}`;
     const col = document.getElementById(colId);
     if (!col) return;
     
-    col.innerHTML = `<h3>${status.toUpperCase()}</h3>`;
+    // Retain heading and check placeholder elements
+    const headingHTML = col.querySelector('h3') ? col.querySelector('h3').outerHTML : `<h3>${status.toUpperCase()}</h3>`;
+    const placeholderHTML = `<div class="empty-column-placeholder" id="placeholder-${statusKey}" style="display: none;">No task yet</div>`;
+    col.innerHTML = headingHTML + placeholderHTML;
 
     const filteredTasks = tasks.filter(t => t.status === status);
+    const placeholderEl = document.getElementById(`placeholder-${statusKey}`);
 
     if (filteredTasks.length === 0) {
-      const emptyState = document.createElement('div');
-      emptyState.className = 'empty-column-state';
-      emptyState.innerHTML = `
-        <div class="empty-icon">📥</div>
-        <div class="empty-text">No tasks yet</div>
-      `;
-      col.appendChild(emptyState);
+      if (placeholderEl) placeholderEl.style.display = 'flex';
     } else {
+      if (placeholderEl) placeholderEl.style.display = 'none';
       filteredTasks.forEach(t => {
         const card = document.createElement('div');
         card.className = 'task-card';
+        card.setAttribute('data-task-id', t._id);
         card.draggable = true;
         card.ondragstart = (e) => e.dataTransfer.setData('taskId', t._id);
 
@@ -944,6 +946,16 @@ function dragLeave(e) {
   }
 }
 
+async function updateTaskStatus(taskId, status) {
+  const res = await fetch(`${API_BASE}/api/tasks/${taskId}/status`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+
+  if (res.ok) await loadTasks();
+}
+
 async function dropTask(e, status) {
   e.preventDefault();
   const column = e.target.closest('.column');
@@ -952,13 +964,7 @@ async function dropTask(e, status) {
   const taskId = e.dataTransfer.getData('taskId');
   if (!taskId) return;
 
-  const res = await fetch(`${API_BASE}/api/tasks/${taskId}/status`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status })
-  });
-
-  if (res.ok) await loadTasks();
+  await updateTaskStatus(taskId, status);
 }
 
 // Comments
@@ -1008,28 +1014,6 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
-
-// // Mobile Sidebar Drawer Control
-// function toggleSidebar() {
-//   const sidebar = document.getElementById('sidebar');
-//   const backdrop = document.getElementById('sidebar-backdrop');
-//   if (sidebar) sidebar.classList.toggle('open');
-//   if (backdrop) backdrop.classList.toggle('active');
-// }
-
-// function closeSidebar() {
-//   const sidebar = document.getElementById('sidebar');
-//   const backdrop = document.getElementById('sidebar-backdrop');
-//   if (sidebar) sidebar.classList.remove('open');
-//   if (backdrop) backdrop.classList.remove('active');
-// }
-
-// // Automatically close mobile sidebar when a project is selected
-// const originalSelectProject = selectProject;
-// selectProject = function(id, title) {
-//   originalSelectProject(id, title);
-//   closeSidebar();
-// };
 
 // Mobile Sidebar Drawer Control
 function toggleSidebar() {
@@ -1102,7 +1086,7 @@ function handleTouchMove(e) {
   if (column) column.classList.add('drag-over');
 }
 
-function handleTouchEnd(e) {
+async function handleTouchEnd(e) {
   if (!draggedCard) return;
 
   if (touchClone) {
@@ -1117,13 +1101,13 @@ function handleTouchEnd(e) {
   document.querySelectorAll('.column').forEach(col => col.classList.remove('drag-over'));
 
   if (column) {
-    const newStatus = column.id.replace('col-', '');
-    const taskId = draggedCard.getAttribute('data-task-id');
+    let newStatus = 'Todo';
+    if (column.id === 'col-InProgress') newStatus = 'In Progress';
+    if (column.id === 'col-Done') newStatus = 'Done';
 
-    if (typeof updateTaskStatus === 'function' && taskId) {
-      updateTaskStatus(taskId, newStatus);
-    } else {
-      column.appendChild(draggedCard);
+    const taskId = draggedCard.getAttribute('data-task-id');
+    if (taskId) {
+      await updateTaskStatus(taskId, newStatus);
     }
   }
 
@@ -1149,26 +1133,3 @@ document.addEventListener('focusout', (e) => {
     document.body.classList.remove('keyboard-active');
   }
 });
-
-// Mobile Sidebar Drawer Controls
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const backdrop = document.getElementById('sidebar-backdrop');
-  if (sidebar) sidebar.classList.toggle('open');
-  if (backdrop) backdrop.classList.toggle('active');
-}
-
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const backdrop = document.getElementById('sidebar-backdrop');
-  if (sidebar) sidebar.classList.remove('open');
-  if (backdrop) backdrop.classList.remove('active');
-}
-
-if (typeof selectProject !== 'undefined') {
-  const originalSelectProject = selectProject;
-  selectProject = function(id, title) {
-    originalSelectProject(id, title);
-    closeSidebar();
-  };
-}
