@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ProjectHub Responsive Design System with Icon Support & Touch Layouts
+   ProjectHub Responsive Design System with Keyboard Stabilization
    ========================================================================== */
 :root {
   --bg-main: #0b0f19;
@@ -301,20 +301,6 @@ header {
 #col-InProgress h3 { color: var(--column-progress); border-bottom-color: var(--column-progress); }
 #col-Done h3 { color: var(--column-done); border-bottom-color: var(--column-done); }
 
-.empty-column-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-sm);
-  padding: 24px;
-}
-
-.empty-icon { font-size: 1.6rem; opacity: 0.5; margin-bottom: 6px; }
-.empty-text { font-size: 0.82rem; color: var(--text-muted); }
-
 /* Task Cards */
 .task-card {
   background-color: var(--bg-card);
@@ -325,6 +311,7 @@ header {
   flex-direction: column;
   gap: 8px;
   cursor: grab;
+  touch-action: none; /* Crucial for mobile touch dragging */
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -366,12 +353,13 @@ header {
   outline: none;
 }
 
-/* Modals & Dialog Elements */
+/* Modals & Dialog Elements (Keyboard Stabilized) */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  height: 100dvh;
+  width: 100vw; 
+  height: 100%;
+  height: -webkit-fill-available;
   background-color: rgba(11, 15, 25, 0.85);
   backdrop-filter: blur(8px);
   z-index: 1000;
@@ -379,6 +367,7 @@ header {
   justify-content: center;
   align-items: center;
   padding: 16px;
+  overflow-y: auto;
 }
 
 .modal-card {
@@ -392,8 +381,17 @@ header {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  max-height: 90dvh;
+  margin: auto;
+  max-height: 85vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.keyboard-active {
+  height: 100% !important;
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
 }
 
 .form-box { display: flex; flex-direction: column; gap: 12px; }
@@ -579,15 +577,8 @@ header {
   font-size: 0.85rem;
 }
 
-/* Dialog Icon Center Utility */
-.dialog-card {
-  text-align: center;
-}
-
-.dialog-icon {
-  font-size: 2.2rem;
-  margin-bottom: 8px;
-}
+.dialog-card { text-align: center; }
+.dialog-icon { font-size: 2.2rem; margin-bottom: 8px; }
 
 /* ==========================================================================
    MOBILE BREAKPOINT (< 768px)

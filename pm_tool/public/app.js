@@ -1054,3 +1054,121 @@ if (typeof selectProject !== 'undefined') {
     closeSidebar();
   };
 }
+
+// ==========================================================================
+// Mobile Touch Drag-and-Drop Support (Touch Events Polyfill)
+// ==========================================================================
+let draggedCard = null;
+let touchClone = null;
+
+function enableTouchDragAndDrop() {
+  document.addEventListener('touchstart', handleTouchStart, { passive: false });
+  document.addEventListener('touchmove', handleTouchMove, { passive: false });
+  document.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+function handleTouchStart(e) {
+  const card = e.target.closest('.task-card');
+  if (!card || e.target.closest('.btn-icon-sm') || e.target.closest('.comment-input')) return;
+
+  draggedCard = card;
+
+  touchClone = card.cloneNode(true);
+  touchClone.style.position = 'fixed';
+  touchClone.style.pointerEvents = 'none';
+  touchClone.style.opacity = '0.85';
+  touchClone.style.zIndex = '9999';
+  touchClone.style.width = card.offsetWidth + 'px';
+  touchClone.style.transform = 'scale(1.03)';
+  document.body.appendChild(touchClone);
+
+  const touch = e.touches[0];
+  touchClone.style.left = touch.clientX - card.offsetWidth / 2 + 'px';
+  touchClone.style.top = touch.clientY - 20 + 'px';
+}
+
+function handleTouchMove(e) {
+  if (!draggedCard || !touchClone) return;
+  e.preventDefault(); 
+
+  const touch = e.touches[0];
+  touchClone.style.left = touch.clientX - touchClone.offsetWidth / 2 + 'px';
+  touchClone.style.top = touch.clientY - 20 + 'px';
+
+  const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+  const column = targetElement ? targetElement.closest('.column') : null;
+
+  document.querySelectorAll('.column').forEach(col => col.classList.remove('drag-over'));
+  if (column) column.classList.add('drag-over');
+}
+
+function handleTouchEnd(e) {
+  if (!draggedCard) return;
+
+  if (touchClone) {
+    touchClone.remove();
+    touchClone = null;
+  }
+
+  const touch = e.changedTouches[0];
+  const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+  const column = targetElement ? targetElement.closest('.column') : null;
+
+  document.querySelectorAll('.column').forEach(col => col.classList.remove('drag-over'));
+
+  if (column) {
+    const newStatus = column.id.replace('col-', '');
+    const taskId = draggedCard.getAttribute('data-task-id');
+
+    if (typeof updateTaskStatus === 'function' && taskId) {
+      updateTaskStatus(taskId, newStatus);
+    } else {
+      column.appendChild(draggedCard);
+    }
+  }
+
+  draggedCard = null;
+}
+
+document.addEventListener('DOMContentLoaded', enableTouchDragAndDrop);
+
+// ==========================================================================
+// Soft Keyboard Open/Close Fix for Mobile Input Fields
+// ==========================================================================
+document.addEventListener('focusin', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    document.body.classList.add('keyboard-active');
+    setTimeout(() => {
+      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  }
+});
+
+document.addEventListener('focusout', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    document.body.classList.remove('keyboard-active');
+  }
+});
+
+// Mobile Sidebar Drawer Controls
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (sidebar) sidebar.classList.toggle('open');
+  if (backdrop) backdrop.classList.toggle('active');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  if (sidebar) sidebar.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('active');
+}
+
+if (typeof selectProject !== 'undefined') {
+  const originalSelectProject = selectProject;
+  selectProject = function(id, title) {
+    originalSelectProject(id, title);
+    closeSidebar();
+  };
+}
