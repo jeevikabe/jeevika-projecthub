@@ -1,4 +1,4 @@
-const socket = io();
+const socket = typeof io !== 'undefined' ? io() : null;
 let currentProjectId = null;
 let currentEditingTaskId = null;
 let taskToDeleteId = null;
@@ -61,7 +61,9 @@ function toggleAuthMode(mode) {
   }
 }
 
-async function register() {
+async function register(e) {
+  if (e) e.preventDefault();
+
   const name = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value.trim();
@@ -85,7 +87,9 @@ async function register() {
   }
 }
 
-async function login() {
+async function login(e) {
+  if (e) e.preventDefault();
+
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value.trim();
 
@@ -179,7 +183,7 @@ function selectProject(id, title) {
   document.getElementById('project-actions').style.display = 'flex';
 
   loadProjects();
-  socket.emit('join-project', id);
+  if (socket) socket.emit('join-project', id);
   loadTasks();
 }
 
@@ -376,7 +380,6 @@ async function submitEditTask() {
   }
 }
 
-// Styled Task Deletion Modal Logic
 function deleteTask(taskId) {
   taskToDeleteId = taskId;
   document.getElementById('delete-task-modal').style.display = 'flex';
@@ -459,10 +462,12 @@ function showNotification(text) {
   }, 4000);
 }
 
-socket.on('task-updated', (data) => {
-  loadTasks();
-  showNotification(data && data.message ? data.message : 'Board updated in real-time!');
-});
+if (socket) {
+  socket.on('task-updated', (data) => {
+    loadTasks();
+    showNotification(data && data.message ? data.message : 'Board updated in real-time!');
+  });
+}
 
 function escapeHtml(str) {
   if (!str) return '';

@@ -12,7 +12,7 @@
   <!-- Toast Notification Container -->
   <div id="toast-container"></div>
 
-  <!-- 1. Authentication Modal (Polished UI) -->
+  <!-- 1. Authentication Modal -->
   <div id="auth-modal" class="modal-overlay" style="display: flex;">
     <div class="modal-card auth-card">
       <div class="auth-header">
@@ -37,8 +37,8 @@
             <input type="password" id="login-password" placeholder="••••••••" required>
           </div>
         </div>
-        <button class="btn-primary btn-full btn-auth" onclick="login()">Sign In</button>
-        <p class="auth-switch">Don't have an account? <a href="#" onclick="toggleAuthMode('register')">Create one</a></p>
+        <button type="button" class="btn-primary btn-full btn-auth" onclick="login(event)">Sign In</button>
+        <p class="auth-switch">Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('register')">Create one</a></p>
       </div>
 
       <!-- Register Form -->
@@ -64,8 +64,8 @@
             <input type="password" id="reg-password" placeholder="••••••••" required>
           </div>
         </div>
-        <button class="btn-primary btn-full btn-auth" onclick="register()">Create Account</button>
-        <p class="auth-switch">Already have an account? <a href="#" onclick="toggleAuthMode('login')">Sign In</a></p>
+        <button type="button" class="btn-primary btn-full btn-auth" onclick="register(event)">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('login')">Sign In</a></p>
       </div>
     </div>
   </div>
