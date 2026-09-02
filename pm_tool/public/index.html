@@ -28,11 +28,17 @@
       <form id="login-box" class="form-box" onsubmit="login(event)">
         <div class="input-group">
           <label for="login-email">Email Address</label>
-          <input type="email" id="login-email" placeholder="name@gmail.com" required>
+          <div class="input-with-icon">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="login-email" placeholder="name@gmail.com" required>
+          </div>
         </div>
         <div class="input-group">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" placeholder="••••••••" required>
+          <div class="input-with-icon">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
         </div>
         <button type="submit" class="btn-primary btn-full btn-auth">Sign In</button>
         <p class="auth-switch">Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('register')">Create one</a></p>
@@ -42,15 +48,24 @@
       <form id="register-box" class="form-box" style="display: none;" onsubmit="register(event)">
         <div class="input-group">
           <label for="reg-name">Full Name</label>
-          <input type="text" id="reg-name" placeholder="UserName" required>
+          <div class="input-with-icon">
+            <span class="input-icon">👤</span>
+            <input type="text" id="reg-name" placeholder="UserName" required>
+          </div>
         </div>
         <div class="input-group">
           <label for="reg-email">Email Address</label>
-          <input type="email" id="reg-email" placeholder="name@gmail.com" required>
+          <div class="input-with-icon">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="reg-email" placeholder="name@gmail.com" required>
+          </div>
         </div>
         <div class="input-group">
           <label for="reg-password">Password</label>
-          <input type="password" id="reg-password" placeholder="••••••••" required>
+          <div class="input-with-icon">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-password" placeholder="••••••••" required>
+          </div>
         </div>
         <button type="submit" class="btn-primary btn-full btn-auth">Create Account</button>
         <p class="auth-switch">Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('login')">Sign In</a></p>
@@ -173,7 +188,7 @@
     </div>
   </div>
 
-  <!-- Application Shell -->
+  <!-- Main Application Container -->
   <div class="app-container">
     
     <!-- Mobile Navigation Top Bar -->
@@ -186,7 +201,7 @@
       <div></div>
     </div>
 
-    <!-- Sidebar Drawer -->
+    <!-- Sidebar Navigation Drawer -->
     <aside id="sidebar" class="sidebar">
       <div class="brand">
         <div class="brand-title-group">
@@ -212,7 +227,7 @@
       </div>
     </aside>
 
-    <!-- Main Workspace -->
+    <!-- Main Board Area -->
     <main class="board-container">
       <header>
         <div class="header-left">
@@ -226,7 +241,7 @@
         <button id="new-task-btn" class="btn-primary" onclick="openCreateTaskModal()" style="display: none;">+ New Task</button>
       </header>
 
-      <!-- Empty View -->
+      <!-- Empty State View -->
       <div id="no-project-view" class="no-project-hero">
         <div class="hero-card">
           <div class="hero-icon">📁</div>
@@ -235,7 +250,7 @@
         </div>
       </div>
 
-      <!-- Kanban Columns -->
+      <!-- Kanban Task Columns -->
       <div class="board" id="board-view" style="display: none;">
         <div class="column" id="col-Todo" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropTask(event, 'Todo')">
           <h3>TODO</h3>

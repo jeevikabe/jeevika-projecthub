@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Modern Responsive Design System (Desktop & Mobile Optimized)
+   ProjectHub Responsive Design System with Icon Support & Touch Layouts
    ========================================================================== */
 :root {
   --bg-main: #0b0f19;
@@ -62,7 +62,7 @@ body {
   position: relative;
 }
 
-/* --- Mobile Header Bar --- */
+/* Mobile Top Navbar Header */
 .mobile-top-bar {
   display: none;
   background-color: var(--bg-sidebar);
@@ -82,7 +82,7 @@ body {
   padding: 4px;
 }
 
-/* Sidebar (Desktop Permanent / Mobile Drawer) */
+/* Sidebar */
 .sidebar {
   width: 260px;
   background-color: var(--bg-sidebar);
@@ -157,7 +157,6 @@ body {
   color: var(--primary-accent);
 }
 
-/* User Profile & Logout */
 .user-profile-box {
   margin-top: auto;
   padding-top: 14px;
@@ -192,7 +191,7 @@ body {
   color: #ffffff;
 }
 
-/* Main Workspace */
+/* Workspace Area */
 .board-container {
   flex: 1;
   display: flex;
@@ -235,7 +234,7 @@ header {
   border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
-/* Empty Project View */
+/* Empty Project Hero View */
 .no-project-hero {
   flex: 1;
   display: flex;
@@ -258,7 +257,7 @@ header {
 .hero-card h2 { font-size: 1.2rem; margin-bottom: 8px; }
 .hero-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
 
-/* Kanban Board & Columns */
+/* Kanban Board Columns */
 .board {
   flex: 1;
   display: flex;
@@ -338,7 +337,7 @@ header {
 .task-desc { font-size: 0.82rem; color: var(--text-secondary); }
 .task-assignee { font-size: 0.78rem; color: var(--text-muted); }
 
-/* Comments */
+/* Task Comments Section */
 .comments {
   margin-top: 4px;
   padding-top: 6px;
@@ -367,7 +366,7 @@ header {
   outline: none;
 }
 
-/* Modals & Inputs */
+/* Modals & Dialog Elements */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -398,7 +397,7 @@ header {
 }
 
 .form-box { display: flex; flex-direction: column; gap: 12px; }
-.input-group { display: flex; flex-direction: column; gap: 4px; }
+.input-group { display: flex; flex-direction: column; gap: 6px; }
 .input-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
 
 .input-group input, .input-group textarea {
@@ -414,7 +413,54 @@ header {
 
 .input-group input:focus, .input-group textarea:focus { border-color: var(--border-focus); }
 
-/* Buttons */
+/* Field Input Icon Containers */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 1rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.input-with-icon input,
+.input-with-icon textarea {
+  padding-left: 38px !important;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.auth-brand-logo {
+  font-size: 2.2rem;
+  margin-bottom: 4px;
+}
+
+.auth-switch {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 8px;
+}
+
+.auth-switch a {
+  color: var(--primary-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* Button Component Layouts */
 .btn-primary {
   padding: 8px 16px;
   background-color: var(--primary-accent);
@@ -453,16 +499,34 @@ header {
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
 
-/* Header & Task Actions */
-.project-actions { display: flex; align-items: center; gap: 4px; }
+/* Icon Button Utility Styles */
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
 .btn-icon {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 4px 8px;
+  padding: 6px 10px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary-accent);
+}
+
+.btn-icon.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger-accent);
 }
 
 .task-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
@@ -472,11 +536,19 @@ header {
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.8rem;
-  padding: 2px;
+  font-size: 0.88rem;
+  padding: 4px;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, background 0.2s ease;
 }
 
-/* Drawer Overlay Backdrop */
+.btn-icon-sm:hover {
+  opacity: 1.0;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Drawer Backdrop Overlay */
 .sidebar-backdrop {
   display: none;
   position: fixed;
@@ -487,7 +559,7 @@ header {
   z-index: 150;
 }
 
-/* Toast */
+/* Toast Messages */
 #toast-container {
   position: fixed;
   bottom: 20px; right: 20px;
@@ -507,6 +579,16 @@ header {
   font-size: 0.85rem;
 }
 
+/* Dialog Icon Center Utility */
+.dialog-card {
+  text-align: center;
+}
+
+.dialog-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
 /* ==========================================================================
    MOBILE BREAKPOINT (< 768px)
    ========================================================================== */
@@ -519,7 +601,6 @@ header {
     display: flex;
   }
 
-  /* Transform Sidebar into Off-Canvas Sliding Drawer */
   .sidebar {
     position: fixed;
     top: 0;
@@ -543,7 +624,6 @@ header {
     display: block;
   }
 
-  /* Dynamic Flexible Header */
   header {
     padding: 12px 16px;
     gap: 8px;
@@ -562,7 +642,6 @@ header {
     font-size: 0.82rem;
   }
 
-  /* Horizontal Scrollable Kanban Columns for Mobile Touch Swipe */
   .board {
     flex-direction: row;
     overflow-x: auto;
