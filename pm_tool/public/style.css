@@ -387,9 +387,9 @@ header {
   overflow-y: auto;
   padding: 40px 16px 140px 16px;
   -webkit-overflow-scrolling: touch;
-} */
+} 
 
-/* .modal-card {
+ .modal-card {
   background-color: var(--bg-modal);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
