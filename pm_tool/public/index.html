@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Jeevika ProjectHub</title>
   <link rel="stylesheet" href="style.css">
   <script src="/socket.io/socket.io.js"></script>
@@ -22,7 +22,7 @@
       </div>
 
       <!-- Login Form -->
-      <div id="login-box" class="form-box">
+      <form id="login-box" class="form-box" onsubmit="login(event)">
         <div class="input-group">
           <label for="login-email">Email Address</label>
           <div class="input-wrapper">
@@ -37,12 +37,12 @@
             <input type="password" id="login-password" placeholder="••••••••" required>
           </div>
         </div>
-        <button type="button" class="btn-primary btn-full btn-auth" onclick="login(event)">Sign In</button>
+        <button type="submit" class="btn-primary btn-full btn-auth">Sign In</button>
         <p class="auth-switch">Don't have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('register')">Create one</a></p>
-      </div>
+      </form>
 
       <!-- Register Form -->
-      <div id="register-box" class="form-box" style="display: none;">
+      <form id="register-box" class="form-box" style="display: none;" onsubmit="register(event)">
         <div class="input-group">
           <label for="reg-name">Full Name</label>
           <div class="input-wrapper">
@@ -64,9 +64,9 @@
             <input type="password" id="reg-password" placeholder="••••••••" required>
           </div>
         </div>
-        <button type="button" class="btn-primary btn-full btn-auth" onclick="register(event)">Create Account</button>
+        <button type="submit" class="btn-primary btn-full btn-auth">Create Account</button>
         <p class="auth-switch">Already have an account? <a href="javascript:void(0)" onclick="toggleAuthMode('login')">Sign In</a></p>
-      </div>
+      </form>
     </div>
   </div>
 
@@ -77,8 +77,8 @@
       <h3>Confirm Logout</h3>
       <p>Are you sure you want to log out of your account?</p>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('logout-modal')">Cancel</button>
-        <button class="btn-danger" onclick="confirmLogout()">Yes, Logout</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('logout-modal')">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmLogout()">Yes, Logout</button>
       </div>
     </div>
   </div>
@@ -92,8 +92,8 @@
         <input type="text" id="new-project-title" placeholder="e.g. Website Design" required>
       </div>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('create-project-modal')">Cancel</button>
-        <button class="btn-primary" onclick="submitCreateProject()">Create Project</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('create-project-modal')">Cancel</button>
+        <button type="button" class="btn-primary" onclick="submitCreateProject()">Create Project</button>
       </div>
     </div>
   </div>
@@ -107,8 +107,8 @@
         <input type="text" id="edit-project-title-input" required>
       </div>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('edit-project-modal')">Cancel</button>
-        <button class="btn-primary" onclick="submitEditProject()">Save Changes</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('edit-project-modal')">Cancel</button>
+        <button type="button" class="btn-primary" onclick="submitEditProject()">Save Changes</button>
       </div>
     </div>
   </div>
@@ -120,8 +120,8 @@
       <h3>Delete Project?</h3>
       <p>This will permanently remove the project and all associated tasks.</p>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('delete-project-modal')">Cancel</button>
-        <button class="btn-danger" onclick="confirmDeleteProject()">Delete</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('delete-project-modal')">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmDeleteProject()">Delete</button>
       </div>
     </div>
   </div>
@@ -133,8 +133,8 @@
       <h3>Delete Task?</h3>
       <p>Are you sure you want to permanently remove this task?</p>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('delete-task-modal')">Cancel</button>
-        <button class="btn-danger" onclick="confirmDeleteTask()">Delete</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('delete-task-modal')">Cancel</button>
+        <button type="button" class="btn-danger" onclick="confirmDeleteTask()">Delete</button>
       </div>
     </div>
   </div>
@@ -156,8 +156,8 @@
         <input type="text" id="task-assignee-input" placeholder="e.g. Jeevika">
       </div>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('create-task-modal')">Cancel</button>
-        <button class="btn-primary" onclick="submitCreateTask()">Create Task</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('create-task-modal')">Cancel</button>
+        <button type="button" class="btn-primary" onclick="submitCreateTask()">Create Task</button>
       </div>
     </div>
   </div>
@@ -179,8 +179,8 @@
         <input type="text" id="edit-task-assignee-input">
       </div>
       <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeModal('edit-task-modal')">Cancel</button>
-        <button class="btn-primary" onclick="submitEditTask()">Save Changes</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('edit-task-modal')">Cancel</button>
+        <button type="button" class="btn-primary" onclick="submitEditTask()">Save Changes</button>
       </div>
     </div>
   </div>
@@ -193,7 +193,7 @@
         <h2>ProjectHub</h2>
       </div>
       
-      <button class="btn-primary btn-full" onclick="openCreateProjectModal()">+ New Project</button>
+      <button type="button" class="btn-primary btn-full" onclick="openCreateProjectModal()">+ New Project</button>
       
       <div class="sidebar-section">
         <span class="section-title">PROJECTS</span>
@@ -205,7 +205,7 @@
           <span class="user-avatar">👤</span>
           <span id="user-display-name">User</span>
         </div>
-        <button class="logout-btn" onclick="promptLogout()">Logout</button>
+        <button type="button" class="logout-btn" onclick="promptLogout()">Logout</button>
       </div>
     </aside>
 
@@ -216,8 +216,8 @@
           <span id="welcome-user" class="welcome-text" style="display: none;"></span>
           <!-- Project Actions (Edit & Delete) -->
           <div id="project-actions" class="project-actions" style="display: none;">
-            <button class="btn-icon" title="Edit Project Title" onclick="openEditProjectModal()">✏️</button>
-            <button class="btn-icon danger" title="Delete Project" onclick="openDeleteProjectModal()">🗑️</button>
+            <button type="button" class="btn-icon" title="Edit Project Title" onclick="openEditProjectModal()">✏️</button>
+            <button type="button" class="btn-icon danger" title="Delete Project" onclick="openDeleteProjectModal()">🗑️</button>
           </div>
         </div>
         <button id="new-task-btn" class="btn-primary" onclick="openCreateTaskModal()" style="display: none;">+ New Task</button>

@@ -515,6 +515,21 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUserDisplay();
     loadProjects();
   }
+
+  // Attach keydown listeners after DOM is fully loaded
+  document.getElementById('login-password')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur(); // Closes the mobile keyboard
+      login(e);
+    }
+  });
+
+  document.getElementById('reg-password')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur(); // Closes the mobile keyboard
+      register(e);
+    }
+  });
 });
 
 // Dynamic Greeting & Selection State
