@@ -1171,3 +1171,18 @@ function closeAuthModal() {
     }
   }
 }
+
+function togglePasswordVisibility(inputId, buttonEl) {
+  const inputField = document.getElementById(inputId);
+  if (!inputField) return;
+
+  if (inputField.type === 'password') {
+    inputField.type = 'text';
+    buttonEl.textContent = '👁️‍🗨️'; // Optional: Change icon to indicate visible state
+    buttonEl.setAttribute('aria-label', 'Hide password');
+  } else {
+    inputField.type = 'password';
+    buttonEl.textContent = '👁️';
+    buttonEl.setAttribute('aria-label', 'Show password');
+  }
+}
